@@ -3,23 +3,42 @@ package com.openclassrooms.bmathias.moodtracker;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // String used to store user note
+    // float value used to track user vertical finger movement
+    private float initialY;
+    // int value that represent the minimum distance needed for the movement to be tracked
+    static final int MIN_DISTANCE = 350;
+
+    // String used to store user note and image/background
     private String noteText = "";
+    private int moodIndex;
+
+    // Array of drawable containing mood images
+    final int[] moodImageList = new int[]{R.drawable.smiley_sad, R.drawable.smiley_disappointed,
+            R.drawable.smiley_normal, R.drawable.smiley_happy, R.drawable.smiley_super_happy};
+
+    // Array of color used to set the background of the layout
+    final int[] moodBackground = new int[]{R.color.faded_red, R.color.warm_grey,
+            R.color.cornflower_blue_65, R.color.light_sage, R.color.banana_yellow};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        displayMood(moodImageList);
+        displayBackground(moodBackground);
     }
 
     /**
@@ -69,5 +88,61 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    /**
+     * This method is used to track user finger movement on the screen
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        {
+            int action = event.getActionMasked();
+
+            switch (action) {
+
+                // When the user put his finger on the screen and move it around
+                case MotionEvent.ACTION_DOWN:
+                    initialY = event.getY();
+                    break;
+
+                // When the user remove his finger
+                case MotionEvent.ACTION_UP:
+                    float finalY = event.getY();
+                    float deltaY = finalY - initialY;
+
+                    if (Math.abs(deltaY) > MIN_DISTANCE) {
+
+                        if (initialY < finalY) {
+                            if (moodIndex > 0) {
+                                moodIndex--;
+                            }
+                            displayMood(moodImageList);
+                            displayBackground(moodBackground);
+                        } else {
+                            if (moodIndex < 4) {
+                                moodIndex++;
+                            }
+                            displayMood(moodImageList);
+                            displayBackground(moodBackground);
+                        }
+                    }
+                    break;
+            }
+            return super.onTouchEvent(event);
+        }
+
+    }
+
+    // This method is used to display the mood image
+    private void displayMood(int[] moodImageList) {
+        ImageView moodImageView = this.findViewById(R.id.mood_image_view);
+        moodImageView.setImageResource(moodImageList[moodIndex]);
+    }
+
+    // This method is used to set the background
+    private void displayBackground(int[] moodBackground) {
+        ConstraintLayout constraintLayout = this.findViewById(R.id.constraintLayout);
+        constraintLayout.setBackgroundResource(moodBackground[moodIndex]);
+    }
 }
+
 
