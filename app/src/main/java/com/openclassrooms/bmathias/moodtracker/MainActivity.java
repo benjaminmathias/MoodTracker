@@ -3,6 +3,7 @@ package com.openclassrooms.bmathias.moodtracker;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,15 @@ public class MainActivity extends AppCompatActivity {
     private String noteText = "";
     private int moodIndex;
 
+    //SharedPreferences file used to store user's note and mood/background
+    static SharedPreferences mPreferences;
+    String sharedPrefFile = "shared preferences";
+
+    //String key for SharedPreferences
+    private final String MOOD_KEY = "mood";
+    private final String BACKGROUND_KEY = "background";
+    private final String NOTE_KEY = "note";
+
     // Array of drawable containing mood images
     final int[] moodImageList = new int[]{R.drawable.smiley_sad, R.drawable.smiley_disappointed,
             R.drawable.smiley_normal, R.drawable.smiley_happy, R.drawable.smiley_super_happy};
@@ -37,8 +47,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getData();
         displayMood(moodImageList);
         displayBackground(moodBackground);
+    }
+
+    /**
+     * Values are saved in the onPause method, when the activity is in the background
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveData();
+    }
+
+    // This method is used to store the mood, background and note in SharedPreferences
+    protected void saveData(){
+        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+        preferencesEditor.putInt(MOOD_KEY, moodIndex);
+        preferencesEditor.putInt(BACKGROUND_KEY, moodIndex);
+        preferencesEditor.putString(NOTE_KEY, noteText);
+        preferencesEditor.apply();
+    }
+
+    // This method is used to get the stored values, if there's none, set to the default value
+    protected void getData(){
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        moodIndex = mPreferences.getInt(MOOD_KEY, 3);
+        moodIndex = mPreferences.getInt(BACKGROUND_KEY, 3);
+        noteText = mPreferences.getString(NOTE_KEY, "");
     }
 
     /**
