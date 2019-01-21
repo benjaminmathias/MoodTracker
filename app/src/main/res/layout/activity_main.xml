@@ -14,10 +14,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/ic_note_add_black"
-        android:text=""
+        android:contentDescription="@string/contentDescriptionNoteButton"
+        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@string/contentDescriptionNoteButton"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/view_history_button"
@@ -26,25 +26,23 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/ic_history_black"
-        android:text=""
+        android:contentDescription="@string/contentDescriptionHistoryButton"
+        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/contentDescriptionHistoryButton"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
     <ImageView
-        android:id="@+id/mood_ImageView"
+        android:id="@+id/mood_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="77dp"
-        android:layout_marginTop="140dp"
         android:layout_marginEnd="77dp"
-        android:layout_marginBottom="141dp"
+        android:contentDescription="@string/contentDescriptionMoodImageView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/contentDescriptionMoodImageView"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
