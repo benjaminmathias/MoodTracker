@@ -12,4 +12,7 @@
     <color name="light_sage">#b8e986</color>
     <color name="banana_yellow">#fff9ec4f</color>
 
+    <!-- Default background color used for the history activity -->
+    <color name="default_background">#CACACA</color>
+
 </resources>

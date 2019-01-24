@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // This method is used to store the mood, background and note in SharedPreferences
-    protected void saveData(){
+    protected void saveData() {
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putInt(MOOD_KEY, moodIndex);
         preferencesEditor.putInt(BACKGROUND_KEY, moodIndex);
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // This method is used to get the stored values, if there's none, set to the default value
-    protected void getData(){
+    protected void getData() {
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         moodIndex = mPreferences.getInt(MOOD_KEY, 3);
         moodIndex = mPreferences.getInt(BACKGROUND_KEY, 3);
@@ -127,46 +127,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is used to track user finger movement on the screen
+     * @param event The MotionEvent that correspond to the user finger movement on the screen
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        {
-            int action = event.getActionMasked();
 
-            switch (action) {
+        int action = event.getActionMasked();
 
-                // When the user put his finger on the screen and move it around
-                case MotionEvent.ACTION_DOWN:
-                    initialY = event.getY();
-                    break;
+        switch (action) {
 
-                // When the user remove his finger
-                case MotionEvent.ACTION_UP:
-                    float finalY = event.getY();
-                    float deltaY = finalY - initialY;
+            // When the user put his finger on the screen and move it around
+            case MotionEvent.ACTION_DOWN:
+                initialY = event.getY();
+                break;
 
-                    if (Math.abs(deltaY) > MIN_DISTANCE) {
+            // When the user remove his finger
+            case MotionEvent.ACTION_UP:
+                float finalY = event.getY();
+                float deltaY = finalY - initialY;
 
-                        if (initialY < finalY) {
-                            if (moodIndex > 0) {
-                                moodIndex--;
-                            }
-                            displayMood(moodImageList);
-                            displayBackground(moodBackground);
-                        } else {
-                            if (moodIndex < 4) {
-                                moodIndex++;
-                            }
-                            displayMood(moodImageList);
-                            displayBackground(moodBackground);
+                if (Math.abs(deltaY) > MIN_DISTANCE) {
+
+                    // If the user user swipe down
+                    if (initialY < finalY) {
+                        if (moodIndex > 0) {
+                            moodIndex--;
                         }
+                        displayMood(moodImageList);
+                        displayBackground(moodBackground);
+                    // If the user swipe up
+                    } else {
+                        if (moodIndex < 4) {
+                            moodIndex++;
+                        }
+                        displayMood(moodImageList);
+                        displayBackground(moodBackground);
                     }
-                    break;
-            }
-            return super.onTouchEvent(event);
+                }
+                break;
         }
-
+        return super.onTouchEvent(event);
     }
 
     // This method is used to display the mood image

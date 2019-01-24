@@ -3,4 +3,13 @@
     <string name="contentDescriptionHistoryButton">History Button</string>
     <string name="contentDescriptionNoteButton">Note Button</string>
     <string name="contentDescriptionMoodImageView">Mood Image</string>
+    <string name="contentDescriptionViewNoteButton">View Note Button</string>
+
+    <string name="Yesterday">Hier</string>
+    <string name="Two_days">Avant-hier</string>
+    <string name="Three_days">Il y a trois jours</string>
+    <string name="Four_days">Il y a quatre jours</string>
+    <string name="Five_days">Il y a cinq jours</string>
+    <string name="Six_days">Il y a six jours</string>
+    <string name="Seven_days">Il y a sept jours</string>
 </resources>
