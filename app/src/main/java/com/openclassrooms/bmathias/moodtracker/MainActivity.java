@@ -1,6 +1,9 @@
 package com.openclassrooms.bmathias.moodtracker;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
 
     // float value used to track user vertical finger movement
@@ -21,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     // int value that represent the minimum distance needed for the movement to be tracked
     static final int MIN_DISTANCE = 350;
 
-    // String used to store user note and image/background
+    // String used to store user note and int for image/background
     private String noteText = "";
     private int moodIndex;
 
@@ -47,6 +52,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create an AlarmManager object
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        // Set the alarm to start at midnight
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        // Prevent the alarm from getting executed the first time the user launch the app
+        if(Calendar.getInstance().after(calendar)){
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        //Repeat that alarm every day at the same hour
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
         getData();
         displayMood(moodImageList);
         displayBackground(moodBackground);
@@ -59,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         saveData();
+    }
+
+    // ! WIP : finish is called on this method to allow the alarm to work
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
     // This method is used to store the mood, background and note in SharedPreferences
