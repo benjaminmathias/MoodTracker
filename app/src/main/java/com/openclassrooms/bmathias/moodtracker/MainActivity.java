@@ -65,11 +65,12 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
 
         // Prevent the alarm from getting executed the first time the user launch the app
-        if(Calendar.getInstance().after(calendar)){
+        if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DATE, 1);
         }
 
         //Repeat that alarm every day at the same hour
+        assert alarmManager != null;
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
         getData();
@@ -122,18 +123,22 @@ public class MainActivity extends AppCompatActivity {
             case R.id.add_comment_button:
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Commentaire");
+                builder.setTitle("Ajoutez un commentaire !");
+                if (!noteText.equals("")) {
+                    builder.setMessage("Commentaire enregistré : " + (mPreferences.getString(NOTE_KEY, noteText)));
+                }
 
                 final EditText input = new EditText(this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
 
-                // When this button is pressed, the user note is stored into a String
+                // When this button is pressed, the user note is stored into a String and saved
                 builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         noteText = input.getText().toString();
                         Log.d("MainActivity", "note : " + noteText);
+                        saveData();
                     }
                 });
 
@@ -184,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                     if (initialY < finalY) {
                         if (moodIndex > 0) {
                             moodIndex--;
+                            saveData();
                         }
                         displayMood(moodImageList);
                         displayBackground(moodBackground);
@@ -191,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         if (moodIndex < 4) {
                             moodIndex++;
+                            saveData();
                         }
                         displayMood(moodImageList);
                         displayBackground(moodBackground);
