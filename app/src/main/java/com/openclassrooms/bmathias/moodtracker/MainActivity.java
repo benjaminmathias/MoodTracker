@@ -69,12 +69,18 @@ public class MainActivity extends AppCompatActivity {
             calendar.add(Calendar.DATE, 1);
         }
 
-        //Repeat that alarm every day at the same hour
+        // Repeat that alarm every day at the same hour
         assert alarmManager != null;
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
+        // Retrieve SharedPreferences to display the saved mood and note, if there's none
+        // display the default value
         getData();
+
+        // Set the image ressource to the ImageView
         displayMood(moodImageList);
+
+        // Set the background color of the layout
         displayBackground(moodBackground);
     }
 
@@ -87,14 +93,19 @@ public class MainActivity extends AppCompatActivity {
         saveData();
     }
 
-    // ! WIP : finish is called on this method to allow the alarm to work
+    /**
+     * finish() is called on this method to allow the UI to be refreshed when the alarm is triggered
+     * if the user didn't force closed the app
+     */
     @Override
     protected void onStop() {
         super.onStop();
         finish();
     }
 
-    // This method is used to store the mood, background and note in SharedPreferences
+    /**
+     * Store the mood, background and note in SharedPreferences
+     */
     protected void saveData() {
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putInt(MOOD_KEY, moodIndex);
@@ -103,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
         preferencesEditor.apply();
     }
 
-    // This method is used to get the stored values, if there's none, set to the default value
+    /**
+     * Get the stored SharedPreferences values, if there's none, set to the default value
+     */
     protected void getData() {
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         moodIndex = mPreferences.getInt(MOOD_KEY, 3);
@@ -118,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (view.getId()) {
 
-            /* Open an AlertDialog when the user press this button, where he will write a note
-               related to his mood */
+            // Open an AlertDialog when the user press this button, where he will write a note
+            // related to his mood
             case R.id.add_comment_button:
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -164,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Track finger movement
      * @param event The MotionEvent that correspond to the user finger movement on the screen
      */
     @Override
@@ -208,13 +222,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
-    // This method is used to display the mood image
+    /**
+     * This method is used to display the mood image
+     */
     private void displayMood(int[] moodImageList) {
         ImageView moodImageView = this.findViewById(R.id.mood_image_view);
         moodImageView.setImageResource(moodImageList[moodIndex]);
     }
 
-    // This method is used to set the background
+    /**
+     * This method is used to set the background color
+     */
     private void displayBackground(int[] moodBackground) {
         ConstraintLayout constraintLayout = this.findViewById(R.id.constraintLayout);
         constraintLayout.setBackgroundResource(moodBackground[moodIndex]);

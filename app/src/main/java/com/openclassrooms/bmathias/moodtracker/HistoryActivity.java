@@ -50,17 +50,22 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        // Add each Relative Layout to listItemView
         layoutList();
+
+        // Add each ImageButton to listButtonNote
         imageButtonList();
 
         // Retrieve the SharedPreferences needed to build the layouts
         mPreferences = getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
 
+        // Build the UI
         displayHistory();
-
     }
 
-    // Handle the BackButton behavior to return to the MainActivity
+    /**
+     * Handle the BackButton behavior to return to the MainActivity
+     */
     @Override
     public void onBackPressed() {
         Intent mainIntent = new Intent(HistoryActivity.this, MainActivity.class);
@@ -69,7 +74,9 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
-    // This method is used to build the layouts
+    /**
+     * Build the UI based on stored SharedPreferences
+     */
     private void displayHistory() {
 
         for (int i = 0; i < 7; i++) {
@@ -77,8 +84,8 @@ public class HistoryActivity extends AppCompatActivity {
                 moodIndex = mPreferences.getInt(BACKGROUND_KEY + i, moodIndex);
                 noteText = mPreferences.getString(NOTE_KEY + i, noteText);
 
-                /* Since moodBackground[] contains 6 items, we need to increment the int moodIndex
-                we're getting from SharedPreferences (only goes from 0 to 4 in the other activity) */
+                // Since moodBackground[] contains 6 items, we need to increment the int moodIndex
+                // we're getting from SharedPreferences (only goes from 0 to 4 in the other activity)
                 moodIndex++;
 
                 ViewGroup.LayoutParams layoutParams = listItemView.get(i).getLayoutParams();
@@ -92,8 +99,8 @@ public class HistoryActivity extends AppCompatActivity {
                 // Setting a background color on a given layout (i) in listItemView
                 listItemView.get(i).setBackgroundResource(moodBackground[moodIndex]);
 
-                /* Setting the width of this layout, each moodIndex (background color) has
-                a corresponding width */
+                // Setting the width of this layout, each moodIndex (background color) has
+                // a corresponding width
                 switch (moodIndex) {
 
                     case 1:
@@ -130,8 +137,10 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-    // onClick method used for the ImageButton. When one is pressed, it will retrieve the assigned
-    // key-value pair then display the user note for that day as a Toast
+    /**
+     * onClick method used for the ImageButton. When one is pressed, it will retrieve the assigned
+     * key-value pair then display the user note for that day as a Toast
+     */
     public void displayMessage(View view) {
 
         switch (view.getId()) {
@@ -172,7 +181,9 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-    // This method is used to handle the OnClick behaviour based on the layout ID
+    /**
+     * This method is used to handle the OnClick behaviour based on the layout ID
+     */
     private View.OnClickListener dialogListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -229,8 +240,10 @@ public class HistoryActivity extends AppCompatActivity {
         }
     };
 
-    // Build an AlertDialog where the user can choose to send his saved mood through mail, or close
-    // the AlertDialog
+    /**
+     * Build an AlertDialog where the user can choose to send his saved mood through mail, or close
+     * the AlertDialog
+     */
     private void moodDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -262,8 +275,10 @@ public class HistoryActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // This method is used to open a mail or sms app and create a premade message based on
-    // the layout the user clicked on
+    /**
+     * Open a mail or sms app and create a premade message based on
+     * the layout the user clicked on
+     */
     private void sendMood(boolean isMail) {
         String dateMoodText = date + ", j'étais " + moodMessage();
 
@@ -281,14 +296,16 @@ public class HistoryActivity extends AppCompatActivity {
             Uri uri = Uri.parse("smsto:");
             Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
             intent.putExtra(Intent.EXTRA_TEXT, "Je te partage mon humeur sur MoodTracker !\n"
-                    +dateMoodText + noteMailText());
+                    + dateMoodText + noteMailText());
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
             }
         }
     }
 
-    // This method is used to convert the moodIndex to a String describing the mood image
+    /**
+     * Convert the moodIndex to a String describing the mood image
+     */
     private String moodMessage() {
         moodIndex++;
         if (moodIndex == 1) {
@@ -305,7 +322,9 @@ public class HistoryActivity extends AppCompatActivity {
         return moodText;
     }
 
-    // This method is used to build the String related to the note for the mail premade message
+    /**
+     * Build the String related to the note for the mail premade message
+     */
     private String noteMailText() {
         if (!noteText.equals("")) {
             return "\nMon commentaire : " + noteText;
@@ -314,7 +333,9 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-    // Add each relative layout in listItemView
+    /**
+     * Add each relative layout in listItemView
+     */
     private void layoutList() {
         listItemView.add(findViewById(R.id.itemList1));
         listItemView.add(findViewById(R.id.itemList2));
@@ -325,7 +346,9 @@ public class HistoryActivity extends AppCompatActivity {
         listItemView.add(findViewById(R.id.itemList7));
     }
 
-    // Add each image button in listButtonNote
+    /**
+     * Add each image button in listButtonNote
+     */
     private void imageButtonList() {
         listButtonNote.add(findViewById(R.id.imageButton1));
         listButtonNote.add(findViewById(R.id.imageButton2));
